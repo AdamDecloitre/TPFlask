@@ -1,23 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const btnScan = document.getElementById('btn-scan-pc');
-    const rootInput = document.getElementById('root-path');
-    const loader = document.getElementById('loader');
-    const resultsSection = document.getElementById('results-section');
-    const foldersResults = document.getElementById('folders-results');
-    const galleryDisplay = document.getElementById('gallery-display');
-    const imagesGrid = document.getElementById('images-grid');
+    let allResults = [];
 
-    // Visionneuse
-    const viewer = document.getElementById('image-viewer');
-    const fullImg = document.getElementById('full-img');
-    const closeBtn = document.getElementById('close-viewer');
-
-    btnScan.addEventListener('click', () => {
-        const path = rootInput.value;
+    document.getElementById('btn-scan').onclick = () => {
+        const path = document.getElementById('root-path').value;
+        const loader = document.getElementById('loader');
         loader.style.display = 'block';
-        resultsSection.style.display = 'none';
-        galleryDisplay.style.display = 'none';
-        foldersResults.innerHTML = '';
 
         fetch('/scan_full_pc', {
             method: 'POST',
@@ -28,51 +15,64 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 loader.style.display = 'none';
                 if (data.error) return alert(data.error);
-
-                resultsSection.style.display = 'block';
-                data.results.forEach(folder => {
-                    const li = document.createElement('li');
-                    li.className = "folder-item";
-                    li.style.cursor = "pointer";
-                    li.style.marginBottom = "10px";
-                    li.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; width:100%;">
-                        <span>📁 <strong>${folder.name}</strong></span>
-                        <span style="color: var(--accent);">${folder.count} images</span>
-                    </div>
-                    <small style="color: var(--text-dim); display:block;">${folder.path}</small>
-                `;
-                    li.onclick = () => displayFolderImages(folder);
-                    foldersResults.appendChild(li);
-                });
+                allResults = data.results;
+                document.getElementById('results-section').style.display = 'block';
+                document.getElementById('folders-results').innerHTML = data.results.map((f, index) => `
+                <li class="folder-item" onclick="openFolder(${index})">
+                    <span>📁 ${f.name}</span> <small>(${f.count} images)</small>
+                </li>
+            `).join('');
             });
-    });
+    };
 
-    function displayFolderImages(folder) {
-        galleryDisplay.style.display = 'block';
-        document.getElementById('current-folder-title').innerText = "Photos dans : " + folder.name;
-        imagesGrid.innerHTML = '';
+    window.openFolder = (index) => {
+        const folder = allResults[index];
+        const grid = document.getElementById('images-grid');
+        document.getElementById('gallery-display').style.display = 'block';
+        document.getElementById('current-title').innerText = "Photos de : " + folder.name;
 
-        folder.first_images.forEach(imgName => {
-            const imgPath = folder.path + '/' + imgName;
-            const card = document.createElement('div');
-            card.className = "image-card";
-            card.innerHTML = `
-                <img src="/media/${encodeURIComponent(imgPath)}" class="gallery-img">
-                <p class="img-name">${imgName}</p>
+        grid.innerHTML = folder.files.map(fileName => {
+            const fullPath = folder.path + '/' + fileName;
+            return `
+                <div class="image-card">
+                    <img src="/media/${encodeURI(fullPath)}" class="gallery-img">
+                    <p class="img-name">${fileName}</p>
+                    
+                    <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px;">
+                        <label style="font-size:0.8rem;">Clusters (K) :</label>
+                        <input type="number" class="k-input" value="3" min="2" max="10" 
+                               style="width:45px; background:var(--bg); color:white; border:1px solid var(--border); border-radius:4px;">
+                        <button onclick="runSegmentation('${fullPath}', this)" class="btn-primary" style="padding:5px 10px; font-size:0.75rem;">Segmenter</button>
+                    </div>
+
+                    <div class="result-zone" style="display:none; margin-top:15px;">
+                        <p style="font-size:0.75rem; color:var(--accent);">Résultat K-Means :</p>
+                        <img src="" class="gallery-img segmented-res">
+                    </div>
+                </div>
             `;
-            // Clic pour visionneuse
-            card.querySelector('img').onclick = () => {
-                viewer.style.display = 'flex';
-                fullImg.src = card.querySelector('img').src;
-            };
-            imagesGrid.appendChild(card);
-        });
+        }).join('');
+    };
 
-        // Scroll automatique vers la galerie
-        galleryDisplay.scrollIntoView({ behavior: 'smooth' });
-    }
+    window.runSegmentation = function (imgPath, btn) {
+        const card = btn.closest('.image-card');
+        const kValue = card.querySelector('.k-input').value;
+        const resultImg = card.querySelector('.segmented-res');
+        const resultZone = card.querySelector('.result-zone');
 
-    closeBtn.onclick = () => viewer.style.display = 'none';
-    viewer.onclick = (e) => { if (e.target === viewer) viewer.style.display = 'none'; };
+        btn.innerText = "⏳...";
+
+        fetch('/segment_image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: imgPath, k: kValue })
+        })
+            .then(res => res.json())
+            .then(data => {
+                btn.innerText = "Segmenter";
+                if (data.error) return alert(data.error);
+                resultImg.src = data.segmented_url;
+                resultZone.style.display = 'block';
+            });
+    };
 });
