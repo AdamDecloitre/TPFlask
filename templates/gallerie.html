@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallerie Photo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <nav class="nav">
+        <a href="/">🏠 Accueil</a>
+        <a href="/about">👨‍💻 À propos</a>
+        <a href="/cv">📄 CV</a>
+        <a href="/gallerie">🖼️ Galerie</a>
+    </nav>
+    
+    <main class="container">
+        
+        <div class="card">
+            <h2>📂 Choisir un dossier local</h2>
+            <p>Entrez le chemin d'un répertoire pour lister ses images.</p>
+            
+            <div class="cta-container" style="display: flex; gap: 10px; margin-top: 15px;">
+                <input type="text" id="folder-path" placeholder="Ex: C:\Users\Perso\Pictures" 
+                       style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
+                <button id="btn-scan" class="btn-primary">Indexer</button>
+            </div>
+            
+            <div id="scan-results" style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="card">
+            <h2>🖼️ Ma Galerie d'Images</h2>
+            
+            <div class="filter-section">
+                <label for="category-select">Filtrer par catégorie :</label>
+                <select id="category-select">
+                    <option value="tous">Toutes les photos</option>
+                    <option value="livre">Livre</option>
+                    <option value="affiche">Affiche</option>
+                    <option value="jeux">Jeux Vidéos</option>
+                </select>
+            </div>
+
+            <div class="gallery">
+                {% for img in images %}
+                    {# Exclusion de la photo de profil de la galerie principale #}
+                    {% if img != 'profil.jpg' %}
+                    <div class="card-image-item all {{ img.split('_')[0] }}">
+                        <img src="{{ url_for('static', filename='images/' + img) }}" alt="{{ img }}" class="gallery-img">
+                        <p class="img-name">{{ img }}</p>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="image-viewer" class="viewer-overlay">
+            <span id="close-viewer">&times;</span>
+            
+            <div class="viewer-content">
+                <div class="main-display">
+                    <img id="full-img" src="" alt="Grand format">
+                </div>
+
+                <div class="side-thumbnails">
+                    <h3>Même catégorie</h3>
+                    <div id="thumbnails-container"></div>
+                </div>
+            </div>
+        </div>
+        
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

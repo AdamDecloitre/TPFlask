@@ -8,6 +8,7 @@
     --border: #30363d;
     --hover: #21262d;
     --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --overlay: rgba(0, 0, 0, 0.95);
 }
 
 * {
@@ -20,7 +21,6 @@ body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     margin: 0;
     line-height: 1.8;
-    /* Interligne augmenté pour la lisibilité */
 }
 
 /* --- Navigation --- */
@@ -50,25 +50,21 @@ body {
     transform: translateY(-1px);
 }
 
-/* --- Layout --- */
+/* --- Layout Principal --- */
 .container {
     max-width: 850px;
     margin: 40px auto;
-    /* Plus d'espace en haut et en bas */
     padding: 0 20px;
     display: flex;
     flex-direction: column;
     gap: 40px;
-    /* C'est ça qui crée l'espace entre tes blocs card */
 }
 
 .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 16px;
-    /* Bordures plus douces */
     padding: 50px;
-    /* Plus d'espace interne */
     box-shadow: var(--card-shadow);
     transition: border-color 0.3s ease;
 }
@@ -77,7 +73,7 @@ body {
     border-color: #444c56;
 }
 
-/* --- Typographie Accueil --- */
+/* --- Typographie --- */
 h1 {
     font-size: 2.5rem;
     color: #fff;
@@ -112,7 +108,7 @@ strong {
     color: var(--text);
 }
 
-/* --- Éléments du CV & About --- */
+/* --- Éléments du CV (Réintégrés) --- */
 .skills {
     list-style: none;
     padding: 0;
@@ -147,7 +143,7 @@ strong {
     margin: 30px 0;
 }
 
-/* --- Boutons --- */
+/* --- Boutons (Réintégrés) --- */
 .cta-container {
     margin-top: 20px;
 }
@@ -176,6 +172,122 @@ strong {
     margin: 40px 0;
 }
 
+/* --- NOUVEAU : SECTION GALERIE --- */
+.filter-section {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+#category-select {
+    background: var(--hover);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.gallery-img:hover {
+    transform: scale(1.03);
+    border-color: var(--accent);
+}
+
+/* --- NOUVEAU : VISIONNEUSE (VIEWER) --- */
+#image-viewer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.viewer-content {
+    display: flex;
+    width: 90%;
+    max-width: 1100px;
+    height: 80vh;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.main-display {
+    flex: 2.5;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-display img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.side-thumbnails {
+    flex: 1;
+    background: var(--card);
+    border-left: 1px solid var(--border);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+#thumbnails-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.side-thumb {
+    width: 100%;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.side-thumb:hover {
+    opacity: 1;
+}
+
+#close-viewer {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #fff;
+    font-size: 35px;
+    cursor: pointer;
+    z-index: 2001;
+}
+
 /* --- Responsive --- */
 @media (max-width: 600px) {
     .card {
@@ -189,5 +301,16 @@ strong {
 
     h1 {
         font-size: 2rem;
+    }
+
+    .viewer-content {
+        flex-direction: column;
+    }
+
+    .side-thumbnails {
+        height: 150px;
+        flex: none;
+        border-left: none;
+        border-top: 1px solid var(--border);
     }
 }
