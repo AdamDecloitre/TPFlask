@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Propos - Adam</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="nav">
+        <a href="/">🏠 Accueil</a>
+        <a href="/about">👨‍💻 À propos</a>
+        <a href="/cv">📄 CV</a>
+    </nav>
+
+    <main class="container">
+        <div class="card">
+            <h1>👨‍💻 À propos de moi</h1>
+            <p>
+                Passionné par l'écosystème numérique, je conçois des applications web et gère des infrastructures sécurisées.
+            </p>
+
+            <hr class="separator">
+
+            <section class="about-grid">
+                <div class="about-item">
+                    <h3>💻 Développement</h3>
+                    <p>Spécialisé en <strong>Python (Flask)</strong> et <strong>Laravel</strong>.</p>
+                </div>
+                <div class="about-item">
+                    <h3>🖥️ Infrastructure</h3>
+                    <p>Expertise <strong>Proxmox</strong>, <strong>TrueNAS</strong> et <strong>CrowdSec</strong>.</p>
+                </div>
+            </section>
+
+            <h3>📍 Ma Localisation</h3>
+            <div id="map"></div>
+
+            <div class="cta-container">
+                <a href="/cv" class="btn-primary">Consulter mon CV</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Coordonnées de Marck
+        var coords = [50.95392, 1.878973];
+        var map = L.map('map').setView(coords, 13);
+
+        // Design de carte sombre (CartoDB Dark Matter)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        // Marqueur
+        L.marker(coords).addTo(map)
+            .bindPopup('Je suis ici !')
+            .openPopup();
+    </script>
+</body>
+</html>

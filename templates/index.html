@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Adam Decloitre</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="nav">
+        <a href="/">🏠 Accueil</a>
+        <a href="/about">👨‍💻 À propos</a>
+        <a href="/cv">📄 CV</a>
+    </nav>
+
+    <main class="container">
+        <section class="card">
+            <div class="hero-content">
+                <h1>Adam Decloitre 👋</h1>
+                <p class="subtitle">Étudiant en Développement Web & Passionné d'Infrastructure</p>
+                
+                <p>
+                    Bienvenue sur mon portfolio ! Actuellement en stage chez <strong>Eurotunnel</strong>, 
+                    je combine la création d'applications web modernes et la gestion d'infrastructures serveurs sécurisées.
+                </p>
+            </div>
+        </section>
+
+        <div class="card">
+            <h2>🚀 En ce moment</h2>
+            <p>
+                Je travaille sur l'optimisation et la sécurité réseau avec des outils comme <strong>CrowdSec</strong> 
+                et le monitoring temps réel via <strong>Netdata</strong>.
+            </p>
+            <div class="cta-container">
+                <a href="/cv" class="btn-primary">Voir mon parcours complet</a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
