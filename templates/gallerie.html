@@ -2,65 +2,37 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galerie IA - Segmentation K-Means</title>
+    <title>Galerie K-means</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-
     <nav class="nav">
         <a href="/">🏠 Accueil</a>
         <a href="/about">👨‍💻 À propos</a>
         <a href="/cv">📄 CV</a>
-        <a href="/gallerie">🖼️ Galerie IA</a>
+        <a href="/gallerie">🖼️ Galerie</a>
     </nav>
     
     <main class="container">
-        
         <div class="card">
-            <h1>🔍 Explorateur de Partitionnement</h1>
-            <p class="subtitle">Analyse non supervisée de vos dossiers photos.</p>
-            
-            <div class="cta-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="root-path" value="C:\" 
-                       style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
+            <h1>🔍 Exploration & Segmentation IA</h1>
+            <div class="cta-container" style="display: flex; gap: 10px;">
+                <input type="text" id="root-path" value="C:\" style="flex: 1; padding: 12px; background: var(--bg); color: white; border: 1px solid var(--border); border-radius: 8px;">
                 <button id="btn-scan" class="btn-primary">Scanner PC</button>
             </div>
-
-            <p>📍 Chemin actuel : <strong id="path-display" style="color: var(--accent);">C:\</strong></p>
-            
-            <div id="loader" style="display:none; color: var(--accent); margin-top:10px;">
-                ⏳ Recherche des dossiers contenant des images...
-            </div>
+            <div id="loader" style="display:none; color: var(--accent); margin-top:10px;">⏳ Recherche des dossiers...</div>
         </div>
 
         <div class="card" id="results-section" style="display:none;">
             <h2>📁 Dossiers indexés</h2>
-            <ul id="folders-results" class="skills" style="display: block;">
-                </ul>
+            <ul id="folders-results" class="skills" style="display: block;"></ul>
         </div>
 
         <div class="card" id="gallery-display" style="display:none;">
-            <h2 id="current-title">Photos du répertoire</h2>
-            <p class="subtitle">Utilisez l'algorithme K-Means pour segmenter les couleurs de chaque image.</p>
-            
-            <div id="images-grid" class="gallery">
-                </div>
+            <h2 id="current-title">Images du dossier</h2>
+            <p class="subtitle">Choisissez une méthode pour segmenter l'image en clusters de couleurs.</p>
+            <div id="images-grid" class="gallery"></div>
         </div>
-
-        <div id="image-viewer" class="viewer-overlay">
-            <span id="close-viewer">&times;</span>
-            <div class="viewer-content">
-                <div class="main-display">
-                    <img id="full-img" src="" alt="Grand format">
-                </div>
-                <div class="side-thumbnails">
-                    <h3>Aperçus</h3>
-                    <div id="thumbnails-container"></div>
-                </div>
-            </div>
-        </div>
-        
     </main>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
